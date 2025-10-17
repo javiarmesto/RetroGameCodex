@@ -1,0 +1,42 @@
+Genera un juego retro completo y autocontenible en UN SOLO archivo llamado index.html (HTML + CSS + JS). Requisitos exactos:
+
+1) Estructura y entrega
+- Todo en index.html (no assets externos).
+- Incluir comentarios al inicio con instrucciones para ejecutar (abrir en navegador) y atajos de teclado.
+
+2) Motor y rendimiento
+- Canvas 800x600, usar requestAnimationFrame, target 60 FPS.
+- Código modular y legible: funciones init(), update(dt), draw(), spawnEnemies(), handleInput(), resetGame().
+- Control de tiempo (delta time) y control de FPS estable.
+
+3) Jugabilidad
+- Jugador: nave en la parte inferior, puede moverse izquierda/derecha y disparar.
+- Enemigos: filas que se desplazan horizontalmente y bajan; spawns por oleadas; velocidad y frecuencia aumentan por nivel.
+- Disparos: balas del jugador y de enemigos; colisiones con detección AABB simple.
+- Vidas (3 por defecto), puntuación, pantalla de victoria (al completar X niveles) y pantalla de Game Over.
+- Power-up ocasional que cae al destruir un enemigo (vida extra o disparo triple).
+- Limitar máximo de líneas por onda para mantener rendimiento.
+
+4) Gráficos y sonido
+- Sprites pixel art generados por funciones de dibujo en canvas (no imágenes externas).
+- Paleta retro limitada (pocos colores).
+- Sonidos generados con WebAudio: efecto disparo, hit, explosion, level-up y game-over (sintetizados).
+- Incluir un pequeño efecto visual al explotar (partículas simples).
+
+5) Controles y accesibilidad
+- Teclado: Izquierda (ArrowLeft / A), Derecha (ArrowRight / D), Disparo (Space / K), Pausa (P).
+- Soporte táctil: botones virtuales en pantalla para mover y disparar (responsive).
+- Mostrar UI: score, lives, level, estado (Pausado).
+- Controles pausables y reanudables; tecla R para reiniciar.
+
+6) Calidad del código
+- Comentarios en español explicando las piezas clave.
+- Evitar dependencias externas.
+- Variables y funciones con nombres claros.
+- Manejo básico de errores (try/catch donde tenga sentido).
+- Opcional pero preferible: semilla aleatoria para reproducibilidad.
+
+7) Entrega en el archivo
+- Al final del código, incluir un bloque de comentarios “Notas” con posibles mejoras y cómo extender (por ejemplo niveles, jefe final, guardar highscore en localStorage).
+
+Genera el archivo completo index.html que cumpla TODO lo anterior. No escribas explicaciones fuera del archivo: todo el contexto y las instrucciones deben estar dentro del archivo como comentarios o UI en pantalla.
