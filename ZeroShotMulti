@@ -1,0 +1,87 @@
+Objetivo: Genera un proyecto completo y autocontenible llamado "retro-arena-mp" que implemente una versión moderna y multijugador del juego arcade retro (nave que dispara, enemigos, niveles, power-ups) usando TypeScript. Entregar el arbol de ficheros, contenido de cada fichero y scripts para ejecutar en local. TODO lo necesario para clonar, instalar y ejecutar en desarrollo y producción.
+
+Requisitos técnicos y de arquitectura
+- Lenguaje: TypeScript (client y server).
+- Cliente: React + Vite + TypeScript. Render en <canvas> 900x600, responsive.
+- Servidor: Node.js + TypeScript (ts-node para dev) con Socket.IO (WebSocket fallback) como capa de networking y servidor autoritativo para la lógica de sincronización.
+- Comunicación: rooms por partida, sync de estado 20 TPS desde servidor, interpolación y predicción simple en cliente (client-side prediction + server reconciliation).
+- Persistencia: opcional, un fichero JSON para highscores (no DB requerida) y endpoints HTTP mínimos para leer highscores.
+- Scripts: npm scripts para dev (client + server en paralelo), build y start (producción).
+- Tests: tests básicos para lógica de colisiones y scoring (vitest o jest).
+
+Entrega y estructura
+- Generar todo el contenido de estos ficheros (completo):
+  - package.json (raíz) con workspaces (client, server) o mono-repo simple.
+  - README.md con instrucciones claras para dev y producción.
+  - /server
+    - package.json
+    - tsconfig.json
+    - src/server.ts (arranca servidor HTTP + Socket.IO)
+    - src/game.ts (lógica de partida autoritativa: tick loop, entidades, colisiones, spawn, powerups, manejo de rooms)
+    - src/types.ts (tipos compartidos: PlayerInput, GameState, Entity)
+    - src/highscores.json (vacío inicialmente)
+    - src/routes.ts (HTTP endpoints para highscores y health)
+  - /client
+    - package.json
+    - tsconfig.json
+    - index.html
+    - src/main.tsx (boot React)
+    - src/App.tsx (lógica UI: login/nickname, lobby, unión a room, HUD)
+    - src/game/engine.ts (render loop, interpolation, input handling, prediction)
+    - src/game/net.ts (Socket.IO client wrapper, sync logic)
+    - src/game/render.ts (dibujo en canvas, sprites pixel draw functions)
+    - src/game/sound.ts (WebAudio sintetizado para efectos)
+    - src/game/types.ts (mismos tipos compartidos, copiar/duplicar si hace falta)
+    - src/styles.css
+  - .gitignore, .env.example
+- Especificar el contenido exacto de server.ts y engine.ts: tick loop del servidor (setInterval a 50ms), control de autoritariedad (servidor resuelve colisiones, asigna IDs, envía snapshot de estado a clients).
+- En client, implementar:
+  - Input sampling con client-side prediction (aplica inputs localmente con timestamp y los envía al servidor).
+  - Interpolación de snapshots entrantes (buffer de 2 snapshots, interpolation LERP).
+  - Reconciliación: cuando llega snapshot del servidor, re-aplicar inputs pendientes.
+  - UI: scoreboard, vidas, nivel, ping, botón de pausa, chat de partida.
+  - Botón/touch controls para móvil (izq/der/disparo).
+- Multiplayer specifics:
+  - Matchmaking simple: lobby donde crear room o unir a room existente (maxPlayers configurable, 2–4 players por room).
+  - Rooms en Socket.IO con namespace /rooms.
+  - Heartbeat/ping: cliente envía ping a interval; servidor monitoriza latencia y desconexiones limpias.
+  - Latencia simulada opcional en el servidor para testing (configurable via ENV).
+- Seguridad y robustez:
+  - Validación básica de inputs en servidor (limitar velocidad, firing rate).
+  - Manejo de desconexiones: el servidor marca player como desconectado y respawnea IA o mantiene estado.
+  - try/catch en puntos críticos y logs informativos.
+- Calidad y documentación:
+  - Comentarios en español en las piezas clave del código explicando decisiones (autoridad servidor, prediction, interpolation).
+  - README con pasos:
+    - Clonar repo.
+    - npm install en raíz y en client/server if workspace.
+    - npm run dev (levanta client en :3000 y server en :4000).
+    - npm run build && npm run start para producción.
+  - Incluir sección "Notas para mejora" al final del README (p. ej. usar Redis para state, WebRTC datachannel P2P alternativa, matchmaking global, persistencia SQL).
+- Pruebas y verificación:
+  - Incluir 2 tests unitarios en server/src para comprobar: colisión entre rectángulos y puntuación al destruir enemigos.
+  - Incluir comando npm test que ejecute los tests.
+
+Requisitos de UX y gameplay (features)
+- Gameplay base del retro original (jugador móvil abajo, disparos, enemigos en filas, powerups). Mantener la esencia arcade.
+- Multijugador cooperativo competitivo: todos en la misma arena compartiendo enemigos; puntuación individual y global; friendly fire configurable (OFF por defecto).
+- Powerups compartidos o por pickup individual (decirlo en comentarios).
+- Boss opcional en nivel X (implementación básica aceptable).
+- Modo de reconexión: si un jugador se desconecta y vuelve, intenta reaparecer en la misma partida (si no ha terminado).
+- Limitar entidad por segundo para proteger performance.
+
+Salida esperada del Codex
+- Entregar todo el contenido de cada archivo con el código fuente completo, bien formateado.
+- También generar el README.md y ejemplos de .env (PUERTOS, LATENCY_SIM_MS).
+- Al final, incluir un pequeño apartado "Comprobación rápida" con comandos: npm install, npm run dev, abrir http://localhost:3000, crear sala, abrir otra ventana e unirse.
+
+Parámetros recomendados para Codex/Copilot
+- Temperatura baja (0.1–0.25) para reproducibilidad.
+- Max tokens alto (si disponible).
+- Si el output se corta, continuar con: "continúa generando la siguiente parte del proyecto desde la última línea".
+
+Restricciones
+- Se permiten dependencias npm (React, Vite, Socket.IO, types), pero no incluir assets externos (todas las imágenes deben generarse con canvas).
+- Mantener la licencia MIT en la raíz.
+
+Genera ahora el proyecto completo tal y como se ha pedido. Todo en español en los comentarios del código y en el README; no incluyas explicaciones adicionales fuera de los archivos del proyecto.
